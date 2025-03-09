@@ -320,3 +320,8 @@ if DEBUG_TOOLBAR:
     INSTALLED_APPS += [
         "debug_toolbar",
     ]
+
+
+CSRF_TRUSTED_ORIGINS = []
+for host in ALLOWED_HOSTS:
+    CSRF_TRUSTED_ORIGINS.append("https://" + host)
