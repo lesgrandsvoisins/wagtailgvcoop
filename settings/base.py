@@ -13,17 +13,88 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+import dj_database_url  # Pour un syntaxe différent de base de données
+from dotenv import load_dotenv  # Pour les variables d'.env
+
+
+# Prendre les variables d'environnement
+load_dotenv()
+
+# Check to see if basic variables needed are defined
+
+REQUIRED = ["DATABASE_URL", "SITE_NAME", "SECRET_KEY", "WAGTAILTRANSFER_SECRET_KEY", "HOST_URL"]
+
+needs_required = []
+for i in REQUIRED:
+    if not os.getenv(i) != "":
+        needs_required.append(i)
+
+if needs_required != []:
+    raise ValueError("Merci de mettre les variables suivantes dans .env: %s" % ", ".join(needs_required))
+
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
+DEBUG = True if os.getenv("DEBUG") == "True" else False
+DEBUG_TOOLBAR = True if os.getenv("DEBUG_TOOLBAR") == "True" else False
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1, localhost").replace(" ", "").split(",")
+
+HOST_URL = os.getenv("HOST_URL", "localhost")
+
+SITE_ID = 1
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+SOCIALACCOUNT_PROVIDERS = {
+    "openid_connect": {
+        "OAUTH_PKCE_ENABLED": True,
+        # 'SOCIALACCOUNT_ONLY': True,
+        "APPS": [
+            {
+                "provider_id": "key-lesgrandsvoisins-com",
+                "name": "key.lesgrandsvoisins.com",
+                "client_id": os.getenv("OPENID_NAME"),
+                "secret": os.getenv("OPENID_SECRET"),
+                "settings": {
+                    "server_url": os.getenv("OPENID_URL"),
+                    # Optional token endpoint authentication method.
+                    # May be one of "client_secret_basic", "client_secret_post"
+                    # If omitted, a method from the the server's
+                    # token auth methods list is used
+                    "token_auth_method": "client_secret_post",
+                },
+            },
+        ],
+    }
+}
+
+# LOGIN_URL = '/login/'
+# LOGIN_REDIRECT_URL = '/'
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_ONLY = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+# # ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+# ACCOUNT_LOGOUT_ON_GET = True
+# # ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+# ACCOUNT_PRESERVE_USERNAME_CASING = False
+# ACCOUNT_SESSION_REMEMBER = True
+# # ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+# ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]
+# # ACCOUNT_USERNAME_MIN_LENGTH = 2
 
 # Application definition
 
 INSTALLED_APPS = [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.openid_connect",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",
@@ -63,6 +134,29 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware', # For automatic language prefix
 ]
 
+
+MIDDLEWARE += [
+    "allauth.account.middleware.AccountMiddleware",
+]
+
+
+# if DEBUG and "localhost" in HOST_URL:
+if DEBUG_TOOLBAR:
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
+ROOT_URLCONF = "settings.urls"
+
+
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
 ROOT_URLCONF = "settings.urls"
 
 TEMPLATES = [
@@ -95,13 +189,25 @@ WSGI_APPLICATION = "settings.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#     }
+# }
 
+DATABASE_URL = os.getenv("DATABASE_URL")  # Lire depuis .env
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    raise ValueError("Please set the DATABASE_URL environment variable")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -133,7 +239,7 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
 ]
 
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Paris"
 
 USE_I18N = True
 WAGTAIL_I18N_ENABLED = True
@@ -200,3 +306,17 @@ WAGTAILSEARCH_BACKENDS = {
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
 WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+
+
+# Only add these on a dev machine
+# if DEBUG and "localhost" in HOST_URL:
+if DEBUG:
+    INSTALLED_APPS += [
+        "django_extensions",
+        "wagtail.contrib.styleguide",
+    ]
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]

@@ -49,7 +49,7 @@ endif
 	echo "MERCI DE CONFIGURER .env AVEC VOS VARIABLES D'ENVIRONNEMENT"
 
 initvenv:
-ifneq (,$(ENV_EXISTS))
+ifneq (,$(VENV_EXISTS))
 	$(error venv exists at $(PROJECT_PATH).venv. please remove if you wish to recreate.)
 endif
 	$(EXEC_CMD) python -m venv $(PROJECT_PATH).venv
@@ -98,3 +98,6 @@ tailwind-compilemax:
 
 tailwind-watch:
 	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css --watch
+
+secretkey:
+	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
