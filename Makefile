@@ -11,7 +11,7 @@ endif
 
 ifeq ($(USE_DOCKER),1)
 	EXEC_CMD := docker-compose exec -ti $(DOCKER_CONTAINER)
-	PROJECT_PATH := /home/wagtail/wagtailgvcoop/
+	PROJECT_PATH := /home/wagtail/gvcoop/
 else
 	EXEC_CMD := 
 	PROJECT_PATH := ${dir ${abspath ${lastword ${MAKEFILE_LIST}}}}
@@ -20,8 +20,7 @@ endif
 ENV_EXISTS := $(wildcard ${PROJECT_PATH}.env)
 VENV_EXISTS := $(wildcard ${PROJECT_PATH}.venv/)
 
-collectstatic:
-	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python manage.py collectstatic --noinput --ignore=*.sass
+# c
 
 messages:
 	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python makemessages -l fr --ignore=manage.py --ignore=medias --ignore=setup.py --ignore=staticfiles --ignore=templates
@@ -92,10 +91,10 @@ tailwind-install:
 
 # From https://tailwindcss.com/docs/installation/tailwind-cli
 tailwind-compile:
-	npx @tailwindcss/cli -i ./wagtailgvcoop/tailwind/input.css -o ./wagtailgvcoop/static/css/wagtailgvcoop/tailwind.css -m
+	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css -m
 
 tailwind-compilemax:
-	npx @tailwindcss/cli -i ./wagtailgvcoop/tailwind/input.css -o ./wagtailgvcoop/static/css/wagtailgvcoop/tailwind.css 
+	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css 
 
 tailwind-watch:
-	npx @tailwindcss/cli -i ./wagtailgvcoop/tailwind/input.css -o ./wagtailgvcoop/static/css/wagtailgvcoop/tailwind.css --watch
+	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css --watch

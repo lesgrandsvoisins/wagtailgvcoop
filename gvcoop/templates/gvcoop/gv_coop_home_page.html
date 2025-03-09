@@ -1,19 +1,19 @@
-{% extends "wagtailgvcoop/base.html" %}
+{% extends "gvcoop/base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags %}
-{% block body_class %}wagtailgvcoop-home{% endblock %}
+{% block body_class %}gvcoop-home{% endblock %}
 {% block extra_css %}
+   <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'css/gvcoop/tailwind.css' %}" /> 
   <link rel="stylesheet"
         type="text/css"
-        href="{% static 'css/wagtailgvcoop/tailwind.css' %}" />
-  <link rel="stylesheet"
-        type="text/css"
-        href="{% static 'css/wagtailgvcoop/home.css' %}" />
+        href="{% static 'css/gvcoop/home.css' %}" />
 {% endblock extra_css %}
 {% block content %}
   <header class="min-w-full text-center">
     <a href="#main">
       <img class="logolgv max-w-full"
-           src="{% static 'images/wagtailgvcoop/logo-lesgrandsvoisins-800-400-white.png' %}">
+           src="{% static 'images/lesgv/logo-lesgrandsvoisins-800-400-white.png' %}">
     </a>
   </header>
   <main class="gvhome darkmode" id="main">
@@ -41,7 +41,7 @@
     <div class="px-3 py-6 max-w-screen-lg mx-auto home-section-3"
          id="section3">{{ page.section3|richtext }}</div>
     {% if related_agenda %}
-      <div class="bg-[url({% static 'images/wagtailgvcoop/agenda.jpg' %})] bg-fixed">
+      <div class="bg-[url({% static 'images/gvcoop/agenda.jpg' %})] bg-fixed">
         <div class="px-3 py-6 max-w-screen-lg mx-auto">
           <div class="agendas max-w-screen-lg">
             <div class="card agenda max-w-screen-lg">
@@ -93,11 +93,11 @@
       <div class="bg-blue-300 py-6 ">
         <h2 class="text-xl text-center">Blog</h2>
         <div class="gvhome-blog px-3 py-2 max-w-screen-xl mx-auto lg:grid-cols-3 md:grid-cols-2 gap-x-4 md:grid">
-          {% include "wagtailgvcoop/fragments/blog_posts.html" with posts=posts %}
+          {% include "gvcoop/fragments/blog_posts.html" with posts=posts %}
         </div>
       </div>
     </main>
-    <footer class="wagtailgvcoop-footer md:grid grid-cols-2 bg-yellow-900 text-white">
+    <footer class="gvcoop-footer md:grid grid-cols-2 bg-yellow-900 text-white">
       <div class="footer1 p-5">{{ footer1|richtext }}</div>
       <div class="footer2 p-5">{{ footer2|richtext }}</div>
     </footer>

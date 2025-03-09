@@ -1,5 +1,5 @@
 """
-WSGI config for wagtailgvcoop project.
+WSGI config for gvcoop project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
