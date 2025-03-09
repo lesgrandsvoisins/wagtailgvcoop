@@ -92,10 +92,10 @@ tailwind-install:
 
 # From https://tailwindcss.com/docs/installation/tailwind-cli
 tailwind-compile:
-	npx @tailwindcss/cli -i ./tailwind/src/input.css -o ./wagtailresdigitacom/static/css/tailwind.css -m
+	npx @tailwindcss/cli -i ./wagtailgvcoop/tailwind/input.css -o ./wagtailgvcoop/static/css/wagtailgvcoop/tailwind.css -m
 
 tailwind-compilemax:
-	npx @tailwindcss/cli -i ./tailwind/src/input.css -o ./wagtailresdigitacom/static/css/tailwind.css 
+	npx @tailwindcss/cli -i ./wagtailgvcoop/tailwind/input.css -o ./wagtailgvcoop/static/css/wagtailgvcoop/tailwind.css 
 
 tailwind-watch:
-	npx @tailwindcss/cli -i ./tailwind/src/input.css -o ./wagtailresdigitacom/static/css/tailwind.css --watch
+	npx @tailwindcss/cli -i ./wagtailgvcoop/tailwind/input.css -o ./wagtailgvcoop/static/css/wagtailgvcoop/tailwind.css --watch
