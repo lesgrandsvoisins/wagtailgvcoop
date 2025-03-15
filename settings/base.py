@@ -16,7 +16,6 @@ import os
 import dj_database_url  # Pour un syntaxe différent de base de données
 from dotenv import load_dotenv  # Pour les variables d'.env
 
-
 # Prendre les variables d'environnement
 load_dotenv()
 
@@ -42,6 +41,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1, localhost").replace(" ", 
 
 HOST_URL = os.getenv("HOST_URL", "localhost")
 
+# For AllAuth
 SITE_ID = 1
 
 # Quick-start development settings - unsuitable for production
@@ -74,7 +74,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # LOGIN_URL = '/login/'
 # LOGIN_REDIRECT_URL = '/'
-ACCOUNT_AUTHENTICATION_METHOD = "username"
+# ACCOUNT_AUTHENTICATION_METHOD = "username"
+ACCOUNT_LOGIN_METHODS = {'username'}
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_ONLY = True
@@ -117,9 +118,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "sass_processor",
     'wagtail_modeladmin',          # if Wagtail >=5.1; Don't repeat if it's there already
     'wagtailmenus',
     'gdvoisins',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -256,11 +259,14 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    'sass_processor.finders.CssFinder',
 ]
 
+SASS_PROCESSOR_AUTO_INCLUDE = True
+
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticsrc"),
-    os.path.join(BASE_DIR, "gdvoisins/static"),
+    os.path.join(BASE_DIR, "staticfiles"),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")

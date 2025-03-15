@@ -17,7 +17,6 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
 ]
 
-
 if settings.DEBUG:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -25,8 +24,6 @@ if settings.DEBUG:
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
 
 urlpatterns += i18n_patterns(
     # path('search/', search_views.search, name='search'),
