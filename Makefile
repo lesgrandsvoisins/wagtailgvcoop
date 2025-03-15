@@ -11,7 +11,7 @@ endif
 
 ifeq ($(USE_DOCKER),1)
 	EXEC_CMD := docker-compose exec -ti $(DOCKER_CONTAINER)
-	PROJECT_PATH := /home/wagtail/gvcoop/
+	PROJECT_PATH := /home/wagtail/gdvoisins/
 else
 	EXEC_CMD := 
 	PROJECT_PATH := ${dir ${abspath ${lastword ${MAKEFILE_LIST}}}}
@@ -91,13 +91,13 @@ tailwind-install:
 
 # From https://tailwindcss.com/docs/installation/tailwind-cli
 tailwind-compile:
-	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css -m
+	npx @tailwindcss/cli -i ./gdvoisins/tailwind/input.css -o ./gdvoisins/static/css/gdvoisins/tailwind.css -m
 
 tailwind-compilemax:
-	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css 
+	npx @tailwindcss/cli -i ./gdvoisins/tailwind/input.css -o ./gdvoisins/static/css/gdvoisins/tailwind.css 
 
 tailwind-watch:
-	npx @tailwindcss/cli -i ./gvcoop/tailwind/input.css -o ./gvcoop/static/css/gvcoop/tailwind.css --watch
+	npx @tailwindcss/cli -i ./gdvoisins/tailwind/input.css -o ./gdvoisins/static/css/gdvoisins/tailwind.css --watch
 
 secretkey:
 	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'

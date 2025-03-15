@@ -1,5 +1,5 @@
 """
-WSGI config for gvcoop project.
+WSGI config for gdvoisins project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
