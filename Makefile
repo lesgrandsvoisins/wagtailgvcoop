@@ -33,17 +33,21 @@ initvenv:
 ifneq (,$(VENV_EXISTS))
 	$(error venv exists at $(PROJECT_PATH).venv. please remove if you wish to recreate.)
 endif
+	echo "You MUST copy and paste as follows if you want an environment"
+	echo "source ./venv/bin/activate"
 	$(EXEC_CMD) python -m venv $(PROJECT_PATH).venv
 
 messages:
-	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python manage.py makemessages -l fr -l en --ignore=manage.py --ignore=medias --ignore=setup.py --ignore=staticfiles --ignore=templates
+	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python manage.py makemessages -l fr -l en 
+
+# --ignore=manage.py --ignore=medias --ignore=setup.py --ignore=staticfiles --ignore=templates
 
 sass:
+	make -C $(PROJECT_PATH)/gdvoisins/tailwind install
 	make -C $(PROJECT_PATH)/gdvoisins/tailwind compile
 	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python manage.py compilescss
 
 init:
-	make -C $(PROJECT_PATH)/gdvoisins init
 ifeq (,$(ENV_EXISTS))
 	make initenv
 	$(error .env required at $(ENV_PATH)  )
@@ -52,6 +56,9 @@ ifeq (,$(VENV_EXISTS))
 	make initvenv
 endif
 	make requirements
+	make migrate
+	make superuser
+	make -C $(PROJECT_PATH)/gdvoisins init
 
 requirements:
 	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/pip install --upgrade pip
@@ -59,17 +66,26 @@ requirements:
 	make -C ./gdvoisins requirements
 
 superuser:
-	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python manage.py createsuperuser --username admin
+	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python manage.py createsuperuser --username admin --email admin@gdvoisins.com
+
+makemigrations:
+	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py makemigrations
+
+migrate:
+	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py migrate
+
+produpdate:
+	make collectstatic
+	make migrate
 
 update: 
 	make sass
+	make makemigrations
 	make messages
-	make collectstatic
-	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py makemigrations
-	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py migrate
+	make produpdate
 
 runserver:
-	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py runserver
+	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py runserver $(HOST_NAME):$(HOST_PORT)
 
 start:
 	make runserver
@@ -79,3 +95,38 @@ secretkey:
 
 collectstatic:
 	$(EXEC_CMD) $(PROJECT_PATH).venv/bin/python ./manage.py collectstatic --noinput
+
+# From https://tailwindcss.com/docs/installation/tailwind-cli
+tailwind-install-bin-linux:
+	wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 
+	mv tailwindcss-linux-x64 venv/bin/tailwindcss
+	chmod +x venv/bin/tailwindcss
+
+# From https://tailwindcss.com/docs/installation/tailwind-cli
+tailwind-install:
+	make -C gdvoisins/tailwind install
+
+# From https://tailwindcss.com/docs/installation/tailwind-cli
+tailwind-compile:
+	make -C gdvoisins/tailwind compile
+
+tailwind-compilemax:
+	make -C gdvoisins/tailwind compile
+
+tailwind-watch:
+	make -C gdvoisins/tailwind watch
+
+fixtures-dump-test-initial:
+	make -C fixtures dump-initial
+
+fixtures-load-test-initial:
+	make -C fixtures load-initial
+
+compilemessages:
+	./.venv/bin/python manage.py compilemessages
+
+makemessages:
+	./.venv/bin/python manage.py  makemessages -l en -l fr                                                                           
+
+	make -C gdvoisins/tailwind compile
+	make -C blog/tailwind compile

@@ -36,7 +36,11 @@
   </head>
   <body class="{% block body_class %}{% endblock body_class %} darkmode">
     {% wagtailuserbar %}
-    {% block content %}{% endblock content %}
+    {% block content %}
+      <img class="float-left" src="https://www.gv.coop/favicon.ico">
+      <img class="float-right" src="https://www.gv.coop/favicon.ico">
+      <img class="float-none" src="https://www.gv.coop/favicon.ico">
+    {% endblock content %}
     {# Global javascript #}
     <script type="text/javascript" src="{% static 'js/gdvoisins.js' %}"></script>
     {% block extra_js %}{# Override this in templates to add extra javascript #}{% endblock extra_js %}

@@ -13,11 +13,11 @@ init:
 
 # From https://tailwindcss.com/docs/installation/tailwind-cli
 compile:
-	npx @tailwindcss/cli -i ./src/input.css -o ../static/css/tailwind.css -m
+	npx @tailwindcss/cli -i ./tailwind/input.css -o ./static/css/gdvoisins/tailwind.css --cwd .. -m
 
 # tailwind-compilemax:
 # 	npx @tailwindcss/cli -i ./gdvoisins/tailwind/input.css -o ./gdvoisins/static/css/gdvoisins/tailwind.css 
 
 watch:
-	npx @tailwindcss/cli -i ./src/input.css -o ../static/css/tailwind.css --watch
+	npx @tailwindcss/cli -i ./tailwind/input.css -o ./static/css/gdvoisins/tailwind.css --cwd .. --watch
 

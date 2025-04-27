@@ -35,19 +35,19 @@ button.toggle-darkmode {
 }
 
 img.richtext-image.full-width {
-    max-width: 100%;
+    width: 100%;
     height: auto;
 }
 
 img.richtext-image.left {
-    max-width: 50%;
+    /* max-width: 50%; */
     float: left;
     padding: 0 1rem 0 0;
     height: auto;
 }
 
 img.richtext-image.right {
-    max-width: 50%;
+    /* max-width: 50%; */
     float: right;
     padding: 0 0 0 1rem;
     height: auto;
